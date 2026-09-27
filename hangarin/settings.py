@@ -25,7 +25,17 @@ SECRET_KEY = 'django-insecure-flxm80(g-x_k_u2yx$fd4lmzh4%lx87-^w1*i8*=ixi*80glx0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['Viole.pythonanywhere.com','127.0.0.1']
+ALLOWED_HOSTS = [
+    'Viole.pythonanywhere.com',
+    'www.Viole.pythonanywhere.com',
+    '127.0.0.1',
+    'localhost',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://Viole.pythonanywhere.com',
+    'https://www.Viole.pythonanywhere.com',
+]
 
 
 # Application definition
@@ -119,8 +129,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 
 # Email
