@@ -5,61 +5,527 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hangarin | Dashboard</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
-        margin: 0;
-        padding: 30px;
-        color: #1f2937;
+      :root {
+        color-scheme: light;
+        --ink: #1e2b27;
+        --muted: #687771;
+        --line: #dfe7e2;
+        --paper: #f3f6f3;
+        --white: #ffffff;
+        --green: #16745a;
+        --green-soft: #e3f2eb;
+        --blue: #315d91;
+        --blue-soft: #e8eff8;
+        --amber: #946117;
+        --amber-soft: #fbf1dc;
+        --red: #ad463c;
+        --red-soft: #f9e9e6;
       }
 
-      .container {
-        max-width: 1000px;
-        margin: auto;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background:
+          radial-gradient(ellipse at 12% 0%, #e4eee8 0, transparent 32rem),
+          var(--paper);
+        margin: 0;
+        color: var(--ink);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .topbar-inner {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--ink);
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--green);
+        color: white;
+        font-family: Georgia, serif;
+        font-size: 21px;
+      }
+
+      .admin-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border: 1px solid #cbd8d1;
+        border-radius: 6px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 650;
+        text-decoration: none;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .admin-link:hover {
+        background: white;
+        border-color: #9eb5a8;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .logout-form { margin: 0; }
+
+      .logout-button {
+        min-height: 38px;
+        padding: 0 11px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      .logout-button:hover { background: #e8efeb; color: var(--ink); }
+
+      main {
+        padding: 48px 0 72px;
+      }
+
+      .intro {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 9px;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
       }
 
       h1 {
-        color: #1d4ed8;
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 38px;
+        font-weight: 500;
+        line-height: 1.12;
+      }
+
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .task-total {
+        flex: 0 0 auto;
+        padding-bottom: 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .task-total strong {
+        color: var(--ink);
+        font-size: 19px;
+        margin-right: 4px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 34px;
+      }
+
+      .summary-item {
+        min-height: 104px;
+        padding: 17px 18px;
+        background: rgb(255 255 255 / 82%);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+      }
+
+      .summary-label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .summary-value {
+        display: block;
+        margin-top: 9px;
+        font-family: Georgia, serif;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .summary-item--progress .summary-value { color: var(--blue); }
+      .summary-item--pending .summary-value { color: var(--amber); }
+      .summary-item--overdue .summary-value { color: var(--red); }
+
+      .list-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .list-caption {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .search {
+        width: min(270px, 100%);
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid #cbd8d1;
+        border-radius: 6px;
+        background: white;
+        color: var(--ink);
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .search:focus {
+        outline: 2px solid #93c7ae;
+        outline-offset: 1px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 4px;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 12px;
+        padding: 4px;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #e9efeb;
+      }
+
+      .filter-button {
+        min-height: 32px;
+        padding: 0 12px;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: #596961;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 650;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .filter-button[aria-pressed="true"] {
+        background: white;
+        color: var(--ink);
+        box-shadow: 0 1px 3px #1e2b271a;
+      }
+
+      .task-list {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: white;
       }
 
       .task {
-        background: white;
-        padding: 18px;
-        margin: 15px 0;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px #00000012;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 145px 145px;
+        align-items: center;
+        gap: 24px;
+        padding: 19px 20px;
+        border-bottom: 1px solid #e9eeeb;
       }
 
-      .status {
-        font-weight: bold;
+      .task:last-child {
+        border-bottom: 0;
       }
 
-      a {
-        color: #2563eb;
+      .task-main { min-width: 0; }
+
+      .task-title {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .task-description {
+        display: -webkit-box;
+        margin: 6px 0 0;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      .task-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 11px;
+      }
+
+      .meta-chip {
+        padding: 4px 7px;
+        border-radius: 4px;
+        background: #f1f5f2;
+        color: #58675f;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .task-status, .task-deadline {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .task-status span {
+        display: inline-block;
+        padding: 6px 8px;
+        border-radius: 4px;
+        background: #edf1ee;
+        color: #596961;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .status--pending { background: var(--amber-soft) !important; color: var(--amber) !important; }
+      .status--progress { background: var(--blue-soft) !important; color: var(--blue) !important; }
+      .status--completed { background: var(--green-soft) !important; color: var(--green) !important; }
+
+      .task-deadline strong {
+        display: block;
+        margin-top: 6px;
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .task-deadline--overdue strong { color: var(--red); }
+
+      .empty-state {
+        padding: 42px 20px;
+        color: var(--muted);
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .empty-state strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--ink);
+        font-family: Georgia, serif;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      [hidden] { display: none !important; }
+
+      @media (max-width: 720px) {
+        .shell { width: min(100% - 32px, 560px); }
+        main { padding-top: 34px; }
+        .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .task { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; }
+        .task-main { grid-column: 1 / -1; }
+        .task-status, .task-deadline { align-self: start; }
+      }
+
+      @media (max-width: 480px) {
+        .shell { width: calc(100% - 28px); }
+        .topbar-inner { min-height: 62px; }
+        main { padding: 28px 0 48px; }
+        .intro { align-items: start; }
+        h1 { font-size: 32px; }
+        .task-total { display: none; }
+        .list-heading { align-items: stretch; flex-direction: column; }
+        .search { width: 100%; }
+        .filters { width: 100%; }
+        .filter-button { flex: 1 0 auto; padding: 0 9px; }
+        .task { padding: 16px 14px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Hangarin</h1>
-      <p>Your daily task dashboard</p>
-
-      <p>
-        <a href="/admin/">Open Admin</a>
-      </p>
-
-      {% for task in tasks %}
-      <div class="task">
-        <h2>{{ task.title }}</h2>
-        <p>{{ task.description }}</p>
-        <p class="status">Status: {{ task.status }}</p>
-        <p>Priority: {{ task.priority.name }}</p>
-        <p>Category: {{ task.category.name }}</p>
-        <p>Deadline: {{ task.deadline|default:"Not set" }}</p>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="/" aria-label="Hangarin dashboard">
+          <span class="brand-mark" aria-hidden="true">H</span>
+          <span>Hangarin</span>
+        </a>
+        <div class="topbar-actions">
+          <a class="admin-link" href="/admin/">Manage tasks <span aria-hidden="true">&#8599;</span></a>
+          <form class="logout-form" action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="logout-button" type="submit">Sign out</button>
+          </form>
+        </div>
       </div>
-      {% empty %}
-      <p>No tasks have been added yet.</p>
-      {% endfor %}
-    </div>
+    </header>
+
+    <main class="shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Task overview</p>
+          <h1 id="page-title">Your work, in view.</h1>
+          <p class="subtitle">A clear view of what needs your attention.</p>
+        </div>
+        <div class="task-total"><strong>{{ tasks|length }}</strong> total tasks</div>
+      </section>
+
+      <section class="summary" aria-label="Task summary">
+        <div class="summary-item">
+          <span class="summary-label">All tasks</span>
+          <strong class="summary-value">{{ tasks|length }}</strong>
+        </div>
+        <div class="summary-item summary-item--progress">
+          <span class="summary-label">In progress</span>
+          <strong class="summary-value">{{ in_progress_count }}</strong>
+        </div>
+        <div class="summary-item summary-item--pending">
+          <span class="summary-label">Pending</span>
+          <strong class="summary-value">{{ pending_count }}</strong>
+        </div>
+        <div class="summary-item summary-item--overdue">
+          <span class="summary-label">Overdue</span>
+          <strong class="summary-value">{{ overdue_count }}</strong>
+        </div>
+      </section>
+
+      <section aria-labelledby="tasks-heading">
+        <div class="list-heading">
+          <div>
+            <h2 id="tasks-heading">Tasks</h2>
+            <p class="list-caption">Search and filter your current workload.</p>
+          </div>
+          <input class="search" id="task-search" type="search" placeholder="Search tasks" aria-label="Search tasks" />
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter tasks by status">
+          <button class="filter-button" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-button" type="button" data-filter="Pending" aria-pressed="false">Pending</button>
+          <button class="filter-button" type="button" data-filter="In Progress" aria-pressed="false">In progress</button>
+          <button class="filter-button" type="button" data-filter="Completed" aria-pressed="false">Completed</button>
+        </div>
+
+        <div class="task-list" id="task-list">
+          {% for task in tasks %}
+          <article class="task" data-status="{{ task.status }}" data-search="{{ task.title }} {{ task.description }} {{ task.priority.name }} {{ task.category.name }}">
+            <div class="task-main">
+              <h3 class="task-title">{{ task.title }}</h3>
+              {% if task.description %}<p class="task-description">{{ task.description }}</p>{% endif %}
+              <div class="task-meta">
+                <span class="meta-chip">{{ task.category.name }}</span>
+                <span class="meta-chip">{{ task.priority.name }} priority</span>
+              </div>
+            </div>
+            <div class="task-status">
+              <span{% if task.status == "Pending" %} class="status--pending"{% elif task.status == "In Progress" %} class="status--progress"{% elif task.status == "Completed" %} class="status--completed"{% endif %}>{{ task.status }}</span>
+            </div>
+            <div class="task-deadline{% if task.deadline and task.deadline < current_time and task.status != "Completed" %} task-deadline--overdue{% endif %}">
+              <span>{% if task.deadline and task.deadline < current_time and task.status != "Completed" %}Overdue{% else %}Due date{% endif %}</span>
+              <strong>{% if task.deadline %}{{ task.deadline|date:"M j, Y" }}{% else %}Not set{% endif %}</strong>
+            </div>
+          </article>
+          {% empty %}
+          <div class="empty-state" id="no-tasks">
+            <strong>Nothing on the list yet</strong>
+            Add your first task from Manage tasks.
+          </div>
+          {% endfor %}
+          {% if tasks %}
+          <div class="empty-state" id="no-results" hidden>
+            <strong>No matching tasks</strong>
+            Try another search or status filter.
+          </div>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const searchInput = document.querySelector("#task-search");
+      const filterButtons = document.querySelectorAll("[data-filter]");
+      const taskRows = document.querySelectorAll(".task[data-status]");
+      const noResults = document.querySelector("#no-results");
+      let activeFilter = "all";
+
+      function updateTasks() {
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        taskRows.forEach((task) => {
+          const matchesStatus = activeFilter === "all" || task.dataset.status === activeFilter;
+          const matchesSearch = task.dataset.search.toLowerCase().includes(query);
+          task.hidden = !matchesStatus || !matchesSearch;
+          if (!task.hidden) visibleCount += 1;
+        });
+
+        if (noResults) noResults.hidden = visibleCount > 0;
+      }
+
+      searchInput.addEventListener("input", updateTasks);
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          filterButtons.forEach((filterButton) => {
+            filterButton.setAttribute("aria-pressed", String(filterButton === button));
+          });
+          updateTasks();
+        });
+      });
+    </script>
   </body>
 </html>

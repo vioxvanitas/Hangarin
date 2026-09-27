@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-flxm80(g-x_k_u2yx$fd4lmzh4%lx87-^w1*i8*=ixi*80glx0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['Viole.pythonanywhere.com',]
+ALLOWED_HOSTS = ['Viole.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition
@@ -52,6 +52,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'hangarin.urls'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 TEMPLATES = [
     {
