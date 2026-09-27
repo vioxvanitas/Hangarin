@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hangarin | Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 30px;
+        color: #1f2937;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      h1 {
+        color: #1d4ed8;
+      }
+
+      .task {
+        background: white;
+        padding: 18px;
+        margin: 15px 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px #00000012;
+      }
+
+      .status {
+        font-weight: bold;
+      }
+
+      a {
+        color: #2563eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Hangarin</h1>
+      <p>Your daily task dashboard</p>
+
+      <p>
+        <a href="/admin/">Open Admin</a>
+      </p>
+
+      {% for task in tasks %}
+      <div class="task">
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+        <p class="status">Status: {{ task.status }}</p>
+        <p>Priority: {{ task.priority.name }}</p>
+        <p>Category: {{ task.category.name }}</p>
+        <p>Deadline: {{ task.deadline|default:"Not set" }}</p>
+      </div>
+      {% empty %}
+      <p>No tasks have been added yet.</p>
+      {% endfor %}
+    </div>
+  </body>
+</html>
